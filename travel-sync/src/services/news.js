@@ -44,23 +44,12 @@ export const getTopHeadlines = async (countryCode = DEFAULT_COUNTRY_CODE) => {
       }
     });
 
-    // Check if request was successful
-    if (response.status !== 200) {
-      throw new Error(`NewsAPI returned status ${response.status}`);
-    }
-
-    // Check for NewsAPI-specific errors in successful responses
-    if (response.data && response.data.status === 'error') {
-      const errorMessage = response.data.message || 'Unknown NewsAPI error occurred';
-      throw new Error(`NewsAPI Error: ${errorMessage}`);
-    }
-
     // Validate response structure
     if (!response.data || typeof response.data !== 'object') {
       throw new Error('Invalid response format from NewsAPI');
     }
 
-    // Check for successful status
+    // Check for NewsAPI-specific errors and validate successful status
     if (response.data.status !== 'ok') {
       const errorMessage = response.data.message || 'NewsAPI request was not successful';
       throw new Error(`NewsAPI Error: ${errorMessage}`);
