@@ -7,5 +7,5 @@ export const API_KEYS = {
 };
 
 export const API_BASE_URLS = {
-  OPENWEATHER: 'https://api.openweathermap.org/data/2.5'
+  OPENWEATHER: 'https://api.openweathermap.org/data/3.0'
 };
