@@ -11,7 +11,7 @@ import { getWeatherData } from '../services/weather.js';
  *   - isError: Error state boolean
  *   - error: Error object if request fails
  *   - city: Current city being queried
- *   - setCity: Function to update the city and trigger new query
+ *   - setCity: Function to update the city (validates input as string) and trigger new query
  *
  * @example
  * const { data, isLoading, isError, error, city, setCity } = useWeatherData('Paris');
@@ -28,9 +28,15 @@ export const useWeatherData = (initialCity) => {
     enabled: !!city, // Only run query if city is not empty/falsy
   });
 
+  const handleSetCity = (newCity) => {
+    if (typeof newCity === 'string' || newCity === '') {
+      setCity(newCity);
+    }
+  };
+
   return {
     ...queryResult,
     city,
-    setCity
+    setCity: handleSetCity
   };
 };
