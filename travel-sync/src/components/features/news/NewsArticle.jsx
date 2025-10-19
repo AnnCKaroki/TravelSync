@@ -10,21 +10,23 @@ const NewsArticle = ({ title, sourceName, imageUrl, url }) => {
       href={url}
       target="_blank"
       rel="noopener noreferrer"
-      className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors"
+      className="flex items-center gap-4 hover:bg-gray-50 p-2 rounded-lg transition-colors"
     >
-      <img
-        src={imageUrl}
-        alt={title}
-        className="w-16 h-16 rounded object-cover flex-shrink-0"
-        onError={(e) => {
-          e.target.src = '/placeholder-image.png';
-        }}
-      />
-      <div className="flex-1 min-w-0">
-        <h3 className="font-bold text-sm line-clamp-2 mb-1">
+      <div className="w-16 h-16 flex-shrink-0">
+        <img
+          src={imageUrl}
+          alt={title}
+          className="w-full h-full object-cover rounded-md"
+          onError={(e) => {
+            e.target.src = '/placeholder-image.png';
+          }}
+        />
+      </div>
+      <div className="min-w-0">
+        <h3 className="truncate font-bold">
           {title}
         </h3>
-        <p className="text-gray-500 text-xs">
+        <p className="text-sm text-gray-500">
           {sourceName}
         </p>
       </div>

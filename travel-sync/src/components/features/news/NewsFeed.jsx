@@ -43,8 +43,9 @@ const NewsFeed = ({ region = 'us' }) => {
   if (validArticles.length > 0) {
     return (
       <Card>
+        <h2 className="text-xl font-bold mb-4">Local News</h2>
         <div className="divide-y divide-gray-100">
-          {validArticles.map((article) => (
+          {validArticles.slice(0, 3).map((article) => (
             <NewsArticle
               key={article.url}
               title={article.title || 'Untitled'}
