@@ -13,13 +13,13 @@ const WeatherCard = ({ city = 'Paris' }) => {
   // Skeleton loading state
   if (isLoading) {
     return (
-      <Card>
-        <div className="flex items-center space-x-4 animate-pulse">
-          <div className="w-16 h-16 bg-gray-200 rounded"></div>
+      <Card className="bg-gradient-to-br from-sky-50 to-blue-50">
+        <div className="flex items-center space-x-6 animate-pulse">
+          <div className="w-20 h-20 bg-gradient-to-br from-sky-200 to-blue-200 rounded-2xl"></div>
           <div className="flex-1">
-            <div className="h-8 bg-gray-200 rounded mb-2 w-20"></div>
-            <div className="h-4 bg-gray-200 rounded mb-1 w-24"></div>
-            <div className="h-4 bg-gray-200 rounded w-32"></div>
+            <div className="h-10 bg-gradient-to-r from-sky-200 to-blue-200 rounded-xl mb-3 w-28"></div>
+            <div className="h-5 bg-gradient-to-r from-sky-200 to-blue-200 rounded-lg mb-2 w-32"></div>
+            <div className="h-4 bg-gradient-to-r from-sky-200 to-blue-200 rounded-lg w-40"></div>
           </div>
         </div>
       </Card>
@@ -29,8 +29,13 @@ const WeatherCard = ({ city = 'Paris' }) => {
   // Error state
   if (isError) {
     return (
-      <Card>
-        <div className="text-red-500">Could not fetch weather.</div>
+      <Card className="bg-gradient-to-br from-red-50 to-rose-50 border-red-100">
+        <div className="flex items-center space-x-3">
+          <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
+            <span className="text-red-500 text-lg">⚠️</span>
+          </div>
+          <div className="text-red-600 font-medium">Could not fetch weather data</div>
+        </div>
       </Card>
     );
   }
@@ -42,23 +47,32 @@ const WeatherCard = ({ city = 'Paris' }) => {
       : null;
 
     return (
-      <Card>
-        <div className="flex items-center space-x-4">
-          {iconUrl && (
-            <img
-              src={iconUrl}
-              alt={`${data.weather?.[0]?.description || 'Weather'} icon`}
-              className="w-16 h-16"
-            />
-          )}
-          <div className="flex-1">
-            <div className="text-5xl font-bold">
-              {formatTemperature(data.main?.temp)}
+      <Card className="bg-gradient-to-br from-sky-50 via-blue-50 to-indigo-50 border-sky-100">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-6">
+            {iconUrl && (
+              <div className="relative">
+                <div className="absolute inset-0 bg-sky-200/30 rounded-2xl blur-xl"></div>
+                <img
+                  src={iconUrl}
+                  alt={`${data.weather?.[0]?.description || 'Weather'} icon`}
+                  className="relative w-20 h-20 drop-shadow-lg"
+                />
+              </div>
+            )}
+            <div className="space-y-2">
+              <div className="text-4xl font-bold bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent">
+                {formatTemperature(data.main?.temp)}
+              </div>
+              <div className="text-xl font-semibold text-slate-700">{data.name}</div>
+              <div className="text-sm font-medium text-sky-600 bg-sky-100/50 px-3 py-1 rounded-full inline-block">
+                {capitalizeFirstLetter(data.weather?.[0]?.description || 'N/A')}
+              </div>
             </div>
-            <div className="text-lg font-medium">{data.name}</div>
-            <div className="text-gray-500">
-              {capitalizeFirstLetter(data.weather?.[0]?.description || 'N/A')}
-            </div>
+          </div>
+          <div className="text-right text-slate-500">
+            <div className="text-sm font-medium">Current Weather</div>
+            <div className="text-xs text-slate-400">Updated now</div>
           </div>
         </div>
       </Card>

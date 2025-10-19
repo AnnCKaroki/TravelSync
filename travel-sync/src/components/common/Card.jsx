@@ -5,12 +5,21 @@ import PropTypes from 'prop-types';
  * Provides consistent card styling with customizable layout options.
  */
 const Card = ({ children, className = '' }) => {
-  // Base card styles with subtle shadow and clean appearance
+  // Modern card styles with enhanced shadows and professional appearance
   const baseStyles = [
     'bg-white',
-    'rounded-xl',
-    'shadow-sm',
-    'p-4',
+    'rounded-2xl',
+    'shadow-lg',
+    'shadow-slate-200/50',
+    'border',
+    'border-slate-100',
+    'p-6',
+    'backdrop-blur-sm',
+    'transition-all',
+    'duration-300',
+    'hover:shadow-xl',
+    'hover:shadow-slate-200/60',
+    'hover:-translate-y-1',
   ].join(' ');
 
   // Merge base styles with custom className for layout flexibility
