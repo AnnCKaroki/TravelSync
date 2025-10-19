@@ -1,12 +1,15 @@
-import WeatherDashboard from './components/features/weather/WeatherDashboard.jsx'
+import Dashboard from './pages/Dashboard.jsx';
 
+/**
+ * Main entry point for the TravelSync application UI.
+ * Renders the Dashboard with global layout styling.
+ */
 function App() {
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col items-center p-4 sm:p-8">
-      <h1 className="text-4xl font-bold text-gray-800 mb-8">TravelSync Dashboard</h1>
-      <WeatherDashboard />
+    <div className="min-h-screen bg-gray-50 text-gray-800 p-4 sm:p-8">
+      <Dashboard />
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
