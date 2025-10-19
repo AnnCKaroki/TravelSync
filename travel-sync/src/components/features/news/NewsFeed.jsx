@@ -1,33 +1,39 @@
 import PropTypes from 'prop-types';
-import Card from '../../common/Card.jsx';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../ui/card';
 import NewsArticle from './NewsArticle.jsx';
 import { useNewsData } from '../../../hooks/useNewsData.js';
+import { Newspaper, AlertCircle } from 'lucide-react';
 
 /**
  * NewsFeed component that displays a list of top news headlines.
  * Features skeleton loading state and error handling.
  */
-const NewsFeed = ({ region = 'us' }) => {
-  const { data, isLoading, isError } = useNewsData(region);
+const NewsFeed = ({ region = 'us', city }) => {
+  const { data, isLoading, isError } = useNewsData({ countryCode: region, query: city });
 
   // Skeleton loading state
   if (isLoading) {
     return (
-      <Card className="bg-gradient-to-br from-emerald-50 to-teal-50">
-        <div className="mb-6">
-          <div className="h-8 bg-gradient-to-r from-emerald-200 to-teal-200 rounded-xl w-32 animate-pulse"></div>
-        </div>
-        <div className="space-y-6">
-          {[...Array(3)].map((_, index) => (
-            <div key={index} className="flex items-center space-x-4 animate-pulse">
-              <div className="w-16 h-16 bg-gradient-to-br from-emerald-200 to-teal-200 rounded-2xl"></div>
-              <div className="flex-1 space-y-2">
-                <div className="h-4 bg-gradient-to-r from-emerald-200 to-teal-200 rounded-lg w-3/4"></div>
-                <div className="h-3 bg-gradient-to-r from-emerald-200 to-teal-200 rounded-lg w-1/2"></div>
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Newspaper className="h-5 w-5" />
+            Latest News
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {[...Array(3)].map((_, index) => (
+              <div key={index} className="flex items-center space-x-4 animate-pulse">
+                <div className="w-12 h-12 bg-muted rounded-lg"></div>
+                <div className="flex-1 space-y-2">
+                  <div className="h-4 bg-muted rounded w-3/4"></div>
+                  <div className="h-3 bg-muted rounded w-1/2"></div>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        </CardContent>
       </Card>
     );
   }
@@ -35,13 +41,18 @@ const NewsFeed = ({ region = 'us' }) => {
   // Error state
   if (isError) {
     return (
-      <Card className="bg-gradient-to-br from-red-50 to-rose-50 border-red-100">
-        <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
-            <span className="text-red-500 text-lg">📰</span>
-          </div>
-          <div className="text-red-600 font-medium">Could not fetch news articles</div>
-        </div>
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-destructive">
+            <AlertCircle className="h-5 w-5" />
+            Latest News
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-sm text-muted-foreground">
+            Could not fetch news articles. Please try again later.
+          </p>
+        </CardContent>
       </Card>
     );
   }
@@ -50,26 +61,27 @@ const NewsFeed = ({ region = 'us' }) => {
   const validArticles = data?.filter(article => article.url) || [];
   if (validArticles.length > 0) {
     return (
-      <Card className="bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 border-emerald-100">
-        <div className="flex items-center space-x-3 mb-6">
-          <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center">
-            <span className="text-white text-lg font-bold">📰</span>
-          </div>
-          <h2 className="text-2xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Newspaper className="h-5 w-5" />
             Latest News
-          </h2>
-        </div>
-        <div className="space-y-4">
-          {validArticles.slice(0, 3).map((article) => (
-            <NewsArticle
-              key={article.url}
-              title={article.title || 'Untitled'}
-              sourceName={article.source?.name || 'Unknown Source'}
-              imageUrl={article.urlToImage || '/placeholder-image.png'}
-              url={article.url}
-            />
-          ))}
-        </div>
+          </CardTitle>
+          <CardDescription>Stay updated with current events</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {validArticles.slice(0, 3).map((article) => (
+              <NewsArticle
+                key={article.url}
+                title={article.title || 'Untitled'}
+                sourceName={article.source?.name || 'Unknown Source'}
+                imageUrl={article.urlToImage || '/placeholder-image.png'}
+                url={article.url}
+              />
+            ))}
+          </div>
+        </CardContent>
       </Card>
     );
   }
@@ -77,7 +89,15 @@ const NewsFeed = ({ region = 'us' }) => {
   // No articles found
   return (
     <Card>
-      <div className="text-gray-500">No news articles available.</div>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Newspaper className="h-5 w-5" />
+          Latest News
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <p className="text-sm text-muted-foreground">No news articles available.</p>
+      </CardContent>
     </Card>
   );
 };

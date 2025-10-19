@@ -1,73 +1,112 @@
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext.jsx';
-import { Card, Button } from '../components/common/index.js';
+import { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Plane } from 'lucide-react';
+import { toast } from 'sonner';
 
 /**
  * Authentication page component for user login.
- * Provides a simple login form that redirects to dashboard on success.
+ * Provides a modern login form inspired by TripVibe design patterns.
  */
 const AuthPage = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  const handleLogin = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    login();
-    navigate('/');
+    try {
+      await login(email, password);
+      toast.success('Welcome back!');
+      navigate('/');
+    } catch (error) {
+      console.error('Login failed:', error);
+      toast.error('Invalid email or password');
+    }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center p-4 relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-600/5 via-indigo-600/5 to-purple-600/5"></div>
-
-      {/* Floating background elements */}
-      <div className="absolute top-20 left-20 w-64 h-64 bg-blue-400/10 rounded-full blur-3xl animate-pulse"></div>
-      <div className="absolute bottom-20 right-20 w-96 h-96 bg-indigo-400/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-purple-400/10 rounded-full blur-3xl animate-pulse delay-500"></div>
-
-      <Card className="w-full max-w-md mx-4 relative z-10 bg-white/90 backdrop-blur-md border-blue-200/50 shadow-2xl shadow-blue-500/10">
-        <div className="space-y-8">
-          <div className="text-center">
-            <div className="w-24 h-24 bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-500 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-xl shadow-blue-500/30 animate-pulse">
-              <span className="text-white text-4xl">✈️</span>
-            </div>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
-              Welcome to TravelSync
-            </h1>
-            <p className="text-slate-600 mt-3 font-medium">Sign in to start your journey</p>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center px-4 py-8 sm:px-6 lg:px-8">
+      <div className="w-full min-w-[320px] max-w-md mx-auto">
+        {/* Header with Logo */}
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-600 mb-4 shadow-lg">
+            <Plane className="w-8 h-8 text-white" />
           </div>
-
-          <form onSubmit={handleLogin} className="space-y-6">
-            <div className="space-y-2">
-              <label className="block text-sm font-semibold text-slate-700">
-                Email Address
-              </label>
-              <input
-                type="email"
-                className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-300 bg-white/50 backdrop-blur-sm"
-                placeholder="Enter your email"
-                required
-              />
-            </div>
-
-            <div className="space-y-2">
-              <label className="block text-sm font-semibold text-slate-700">
-                Password
-              </label>
-              <input
-                type="password"
-                className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-300 bg-white/50 backdrop-blur-sm"
-                placeholder="Enter your password"
-                required
-              />
-            </div>
-
-            <Button type="submit" className="w-full mt-8">
-              Sign In to Continue
-            </Button>
-          </form>
+          <h1 className="text-3xl font-bold text-gray-900">TravelSync</h1>
+          <p className="text-gray-600 mt-2">Your journey begins here</p>
         </div>
-      </Card>
+
+        {/* Login Card */}
+        <Card className="shadow-xl border-0 bg-white/95 backdrop-blur-sm mx-4 sm:mx-0">
+          <CardHeader className="pb-4">
+            <CardTitle className="text-2xl text-center">Welcome back</CardTitle>
+            <CardDescription className="text-center">Sign in to access your trips</CardDescription>
+          </CardHeader>
+
+          <CardContent className="px-6 py-4 space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="you@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="h-11"
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="h-11"
+                  required
+                />
+              </div>
+
+              <Button type="submit" className="w-full h-11 text-base font-medium">
+                Sign In
+              </Button>
+            </form>
+
+            <div className="text-center text-sm">
+              <span className="text-gray-600">Don't have an account? </span>
+              <button
+                type="button"
+                className="text-blue-600 hover:underline font-medium focus:outline-none focus:underline"
+                onClick={() => {
+                  // Navigate to signup when implemented
+                  console.log('Navigate to signup');
+                }}
+              >
+                Sign up
+              </button>
+            </div>
+
+            {/* Demo credentials info */}
+            <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
+              <p className="text-xs text-blue-700 text-center font-medium">Demo Credentials</p>
+              <p className="text-xs text-blue-600 text-center mt-1">
+                Email: demo@travelsync.com<br />
+                Password: demo123
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 };

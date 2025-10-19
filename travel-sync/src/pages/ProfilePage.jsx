@@ -1,6 +1,9 @@
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext.jsx';
-import { Card, Button } from '../components/common/index.js';
+import { useAuth } from '../hooks/useAuth.js';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
+import { Button } from '../components/ui/button';
+import { Avatar, AvatarFallback } from '../components/ui/avatar';
+import { User, Mail, LogOut, Shield } from 'lucide-react';
 
 /**
  * ProfilePage component for user profile management.
@@ -16,100 +19,111 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-blue-50 to-cyan-50 p-6">
-      <div className="max-w-2xl mx-auto">
-        <div className="text-center mb-8">
-          <div className="w-24 h-24 bg-gradient-to-br from-indigo-500 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-indigo-500/25">
-            <span className="text-white text-4xl">👤</span>
+    <div className="min-h-screen bg-background">
+      <div className="container mx-auto p-6">
+        <div className="max-w-2xl mx-auto">
+          <div className="text-center mb-8">
+            <Avatar className="w-24 h-24 mx-auto mb-4">
+              <AvatarFallback className="text-2xl">
+                {user?.name?.charAt(0)?.toUpperCase() || 'U'}
+              </AvatarFallback>
+            </Avatar>
+            <h1 className="text-3xl font-bold tracking-tight">Profile</h1>
+            <p className="text-muted-foreground mt-2">
+              Manage your account settings
+            </p>
           </div>
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent">
-            Profile
-          </h1>
-          <p className="text-slate-600 mt-3 font-medium">Manage your account settings</p>
-        </div>
 
-        <div className="space-y-6">
-          {/* Welcome Card */}
-          <Card className="bg-white/80 backdrop-blur-sm border-indigo-100">
-            <div className="text-center space-y-4">
-              <div className="w-20 h-20 bg-gradient-to-br from-indigo-100 to-blue-100 rounded-full flex items-center justify-center mx-auto">
-                <span className="text-indigo-600 text-2xl font-bold">
-                  {user?.name?.charAt(0)?.toUpperCase() || 'U'}
-                </span>
-              </div>
-              <div>
-                <h2 className="text-2xl font-bold text-slate-700 mb-2">
-                  Welcome, {user?.name || 'User'}!
-                </h2>
-                <p className="text-slate-500">Ready for your next adventure?</p>
-              </div>
-            </div>
-          </Card>
+          <div className="space-y-6">
+            {/* Welcome Card */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <User className="h-5 w-5" />
+                  Welcome Back!
+                </CardTitle>
+                <CardDescription>
+                  Ready for your next adventure?
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="text-center">
+                  <h2 className="text-xl font-semibold mb-2">
+                    Hello, {user?.name || 'User'}!
+                  </h2>
+                  <p className="text-sm text-muted-foreground">
+                    We're excited to help you plan your travels
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
 
-          {/* Account Info Card */}
-          <Card className="bg-white/80 backdrop-blur-sm border-indigo-100">
-            <div className="space-y-6">
-              <h3 className="text-xl font-semibold text-slate-700 flex items-center space-x-3">
-                <span className="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center">
-                  <span className="text-indigo-600">⚙️</span>
-                </span>
-                <span>Account Information</span>
-              </h3>
-
-              <div className="space-y-4">
-                <div className="bg-gradient-to-r from-indigo-50 to-blue-50 p-4 rounded-xl border border-indigo-100">
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <p className="text-sm text-slate-500 uppercase tracking-wide">Name</p>
-                      <p className="text-slate-700 font-medium">{user?.name || 'Not specified'}</p>
+            {/* Account Info Card */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Shield className="h-5 w-5" />
+                  Account Information
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between p-4 border rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <User className="h-4 w-4 text-muted-foreground" />
+                      <div>
+                        <p className="text-sm font-medium">Full Name</p>
+                        <p className="text-sm text-muted-foreground">
+                          {user?.name || 'Not specified'}
+                        </p>
+                      </div>
                     </div>
-                    <button className="text-indigo-600 hover:text-indigo-700 font-medium text-sm">
+                    <Button variant="outline" size="sm">
                       Edit
-                    </button>
+                    </Button>
                   </div>
-                </div>
 
-                <div className="bg-gradient-to-r from-indigo-50 to-blue-50 p-4 rounded-xl border border-indigo-100">
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <p className="text-sm text-slate-500 uppercase tracking-wide">Email</p>
-                      <p className="text-slate-700 font-medium">user@example.com</p>
+                  <div className="flex items-center justify-between p-4 border rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <Mail className="h-4 w-4 text-muted-foreground" />
+                      <div>
+                        <p className="text-sm font-medium">Email Address</p>
+                        <p className="text-sm text-muted-foreground">
+                          {user?.email || 'user@example.com'}
+                        </p>
+                      </div>
                     </div>
-                    <button className="text-indigo-600 hover:text-indigo-700 font-medium text-sm">
+                    <Button variant="outline" size="sm">
                       Edit
-                    </button>
+                    </Button>
                   </div>
                 </div>
-              </div>
-            </div>
-          </Card>
+              </CardContent>
+            </Card>
 
-          {/* Logout Card */}
-          <Card className="bg-white/80 backdrop-blur-sm border-red-100">
-            <div className="space-y-4">
-              <h3 className="text-xl font-semibold text-slate-700 flex items-center space-x-3">
-                <span className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center">
-                  <span className="text-red-600">🚪</span>
-                </span>
-                <span>Account Actions</span>
-              </h3>
-
-              <div className="bg-gradient-to-r from-red-50 to-rose-50 p-4 rounded-xl border border-red-100">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium text-slate-700">Sign Out</p>
-                    <p className="text-sm text-slate-500">You'll need to sign in again to access your account</p>
-                  </div>
-                  <Button
-                    onClick={handleLogout}
-                    className="bg-gradient-to-r from-red-500 to-rose-500 hover:from-red-600 hover:to-rose-600 shadow-red-500/25"
-                  >
-                    Log Out
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </Card>
+            {/* Logout Card */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-destructive">
+                  <LogOut className="h-5 w-5" />
+                  Sign Out
+                </CardTitle>
+                <CardDescription>
+                  You'll need to sign in again to access your account
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Button
+                  onClick={handleLogout}
+                  variant="destructive"
+                  className="w-full"
+                >
+                  <LogOut className="h-4 w-4 mr-2" />
+                  Sign Out
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
     </div>

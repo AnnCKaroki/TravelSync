@@ -1,7 +1,8 @@
 import PropTypes from 'prop-types';
-import Card from '../../common/Card.jsx';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../ui/card';
 import { useWeatherData } from '../../../hooks/useWeatherData.js';
 import { formatTemperature, capitalizeFirstLetter } from '../../../utils/formatters.js';
+import { Cloud, AlertCircle } from 'lucide-react';
 
 /**
  * WeatherCard component that displays current weather information for a city.
@@ -13,15 +14,23 @@ const WeatherCard = ({ city = 'Paris' }) => {
   // Skeleton loading state
   if (isLoading) {
     return (
-      <Card className="bg-gradient-to-br from-sky-50 to-blue-50">
-        <div className="flex items-center space-x-6 animate-pulse">
-          <div className="w-20 h-20 bg-gradient-to-br from-sky-200 to-blue-200 rounded-2xl"></div>
-          <div className="flex-1">
-            <div className="h-10 bg-gradient-to-r from-sky-200 to-blue-200 rounded-xl mb-3 w-28"></div>
-            <div className="h-5 bg-gradient-to-r from-sky-200 to-blue-200 rounded-lg mb-2 w-32"></div>
-            <div className="h-4 bg-gradient-to-r from-sky-200 to-blue-200 rounded-lg w-40"></div>
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Cloud className="h-5 w-5" />
+            Weather
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center gap-6 animate-pulse">
+            <div className="w-16 h-16 bg-muted rounded-lg"></div>
+            <div className="flex-1 space-y-2">
+              <div className="h-8 bg-muted rounded w-20"></div>
+              <div className="h-4 bg-muted rounded w-24"></div>
+              <div className="h-3 bg-muted rounded w-32"></div>
+            </div>
           </div>
-        </div>
+        </CardContent>
       </Card>
     );
   }
@@ -29,13 +38,18 @@ const WeatherCard = ({ city = 'Paris' }) => {
   // Error state
   if (isError) {
     return (
-      <Card className="bg-gradient-to-br from-red-50 to-rose-50 border-red-100">
-        <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
-            <span className="text-red-500 text-lg">⚠️</span>
-          </div>
-          <div className="text-red-600 font-medium">Could not fetch weather data</div>
-        </div>
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-destructive">
+            <AlertCircle className="h-5 w-5" />
+            Weather
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-sm text-muted-foreground">
+            Could not fetch weather data. Please try again later.
+          </p>
+        </CardContent>
       </Card>
     );
   }
@@ -47,34 +61,42 @@ const WeatherCard = ({ city = 'Paris' }) => {
       : null;
 
     return (
-      <Card className="bg-gradient-to-br from-sky-50 via-blue-50 to-indigo-50 border-sky-100">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-6">
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Cloud className="h-5 w-5" />
+            Weather
+          </CardTitle>
+          <CardDescription>Current conditions in {data.name}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center gap-6">
             {iconUrl && (
-              <div className="relative">
-                <div className="absolute inset-0 bg-sky-200/30 rounded-2xl blur-xl"></div>
-                <img
-                  src={iconUrl}
-                  alt={`${data.weather?.[0]?.description || 'Weather'} icon`}
-                  className="relative w-20 h-20 drop-shadow-lg"
-                />
-              </div>
+              <img
+                src={iconUrl}
+                alt={`${data.weather?.[0]?.description || 'Weather'} icon`}
+                width={64}
+                height={64}
+                loading="lazy"
+                decoding="async"
+                fetchpriority="low"
+                className="w-16 h-16"
+              />
             )}
-            <div className="space-y-2">
-              <div className="text-4xl font-bold bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent">
+            <div className="flex-1">
+              <div className="text-3xl font-bold">
                 {formatTemperature(data.main?.temp)}
               </div>
-              <div className="text-xl font-semibold text-slate-700">{data.name}</div>
-              <div className="text-sm font-medium text-sky-600 bg-sky-100/50 px-3 py-1 rounded-full inline-block">
+              <div className="text-lg font-semibold text-foreground">{data.name}</div>
+              <div className="text-sm text-muted-foreground">
                 {capitalizeFirstLetter(data.weather?.[0]?.description || 'N/A')}
               </div>
             </div>
+            <div className="text-right text-muted-foreground">
+              <div className="text-xs">Updated now</div>
+            </div>
           </div>
-          <div className="text-right text-slate-500">
-            <div className="text-sm font-medium">Current Weather</div>
-            <div className="text-xs text-slate-400">Updated now</div>
-          </div>
-        </div>
+        </CardContent>
       </Card>
     );
   }

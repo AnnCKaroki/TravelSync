@@ -1,6 +1,12 @@
 import { useState } from 'react';
-import { Card, Button } from '../components/common/index.js';
+import { useNavigate } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import Calendar from '../components/features/tripplanner/Calendar.jsx';
+import { useTrips } from '../context/TripContext.jsx';
+import { ArrowLeft, MapPin, Calendar as CalendarIcon } from 'lucide-react';
 
 /**
  * AddTripPage component for planning new trips.
@@ -8,54 +14,81 @@ import Calendar from '../components/features/tripplanner/Calendar.jsx';
  */
 const AddTripPage = () => {
   const [destination, setDestination] = useState('');
-  const [_dates, _setDates] = useState(null); // Prefixed with _ to indicate unused for now
+  const [dates, setDates] = useState({ startDate: '', endDate: '' });
+  const navigate = useNavigate();
+  const { addTrip } = useTrips();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // TODO: Handle trip planning logic
-    console.log('Planning trip to:', destination);
+    const created = addTrip({ destination, startDate: dates.startDate, endDate: dates.endDate, countryCode: 'us' });
+    navigate(`/app/trips/${created.id}`);
   };
 
+  const isFormValid = destination.trim() && dates.startDate && dates.endDate;
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-rose-50 p-6">
+    <div className="min-h-screen bg-background p-4">
       <div className="max-w-2xl mx-auto">
-        <div className="text-center mb-8">
-          <div className="w-20 h-20 bg-gradient-to-br from-purple-500 to-pink-500 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-purple-500/25">
-            <span className="text-white text-3xl">🗺️</span>
+        {/* Header */}
+        <div className="mb-8">
+          <Button
+            variant="ghost"
+            onClick={() => navigate(-1)}
+            className="mb-6 -ml-2"
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back
+          </Button>
+
+          <div className="space-y-2">
+            <h1 className="text-3xl font-bold tracking-tight">Plan a New Trip</h1>
+            <p className="text-lg text-muted-foreground">Create your next adventure</p>
           </div>
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-            Plan Your Trip
-          </h1>
-          <p className="text-slate-600 mt-3 font-medium">Where will your next adventure take you?</p>
         </div>
 
-        <Card className="bg-white/80 backdrop-blur-sm border-purple-100">
-          <form onSubmit={handleSubmit} className="space-y-8">
-            <div className="space-y-3">
-              <label className="block text-lg font-semibold text-slate-700">
-                Where are you going?
-              </label>
-              <input
-                type="text"
-                value={destination}
-                onChange={(e) => setDestination(e.target.value)}
-                className="w-full px-4 py-4 border-2 border-slate-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-purple-500/20 focus:border-purple-500 transition-all duration-300 bg-white/50 backdrop-blur-sm text-lg"
-                placeholder="Enter your destination..."
-                required
-              />
-            </div>
+        {/* Form Card */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <MapPin className="h-5 w-5" />
+              Trip Details
+            </CardTitle>
+            <CardDescription>
+              Tell us where you're going and when you plan to travel
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="space-y-2">
+                <Label htmlFor="destination">Destination</Label>
+                <Input
+                  id="destination"
+                  type="text"
+                  value={destination}
+                  onChange={(e) => setDestination(e.target.value)}
+                  placeholder="Enter destination (e.g., Paris, Tokyo, New York)"
+                  required
+                />
+              </div>
 
-            <div className="space-y-3">
-              <label className="block text-lg font-semibold text-slate-700">
-                When are you traveling?
-              </label>
-              <Calendar />
-            </div>
+              <div className="space-y-2">
+                <Label className="flex items-center gap-2">
+                  <CalendarIcon className="h-4 w-4" />
+                  Travel Dates
+                </Label>
+                <Calendar onChange={(r) => setDates(r || { startDate: '', endDate: '' })} />
+              </div>
 
-            <Button type="submit" className="w-full">
-              Plan Trip
-            </Button>
-          </form>
+              <Button
+                type="submit"
+                disabled={!isFormValid}
+                className="w-full"
+                size="lg"
+              >
+                Create Trip
+              </Button>
+            </form>
+          </CardContent>
         </Card>
       </div>
     </div>

@@ -18,7 +18,7 @@ import { API_KEYS, API_BASE_URLS, DEFAULT_COUNTRY_CODE } from '../utils/constant
  * - Empty or malformed response data
  * - Invalid country codes
  */
-export const getTopHeadlines = async (countryCode = DEFAULT_COUNTRY_CODE) => {
+export const getTopHeadlines = async (countryCode = DEFAULT_COUNTRY_CODE, q) => {
   // Validate API key exists
   if (!API_KEYS.NEWS || API_KEYS.NEWS.trim().length === 0) {
     throw new Error('News API key is missing or empty');
@@ -32,11 +32,14 @@ export const getTopHeadlines = async (countryCode = DEFAULT_COUNTRY_CODE) => {
   const sanitizedCountryCode = countryCode ? countryCode.trim().toLowerCase() : DEFAULT_COUNTRY_CODE;
 
   try {
-    const response = await axios.get(`${API_BASE_URLS.NEWS}/top-headlines`, {
+    const endpoint = q ? `${API_BASE_URLS.NEWS}/everything` : `${API_BASE_URLS.NEWS}/top-headlines`;
+    const response = await axios.get(endpoint, {
       params: {
-        country: sanitizedCountryCode,
         apiKey: API_KEYS.NEWS,
-        pageSize: 20
+        pageSize: 20,
+        ...(q
+          ? { q, sortBy: 'publishedAt', language: 'en' }
+          : { country: sanitizedCountryCode }),
       },
       timeout: 10000, // 10 second timeout for news requests
       headers: {

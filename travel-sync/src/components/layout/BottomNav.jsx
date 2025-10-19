@@ -1,4 +1,5 @@
 import { NavLink } from 'react-router-dom';
+import { Home, Plus, User } from 'lucide-react';
 
 /**
  * Bottom navigation component that provides fixed navigation at the bottom of the screen.
@@ -6,13 +7,13 @@ import { NavLink } from 'react-router-dom';
  */
 const BottomNav = () => {
   const navigationLinks = [
-    { path: '/', label: 'My Trips', icon: '🏠' },
-    { path: '/add', label: 'Add Trip', icon: '➕' },
-    { path: '/profile', label: 'Profile', icon: '👤' }
+    { path: '/app', label: 'My Trips', icon: Home },
+    { path: '/app/add', label: 'Add Trip', icon: Plus },
+    { path: '/app/profile', label: 'Profile', icon: User }
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-lg border-t border-slate-200/50 shadow-2xl shadow-slate-900/10">
+    <nav className="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-lg border-t border-slate-200/50 shadow-2xl shadow-slate-900/10 supports-[padding:max(0px)]:pb-[max(env(safe-area-inset-bottom),0px)]" role="navigation" aria-label="Bottom">
       <div className="flex justify-around items-center py-2 px-4 max-w-md mx-auto">
         {navigationLinks.map((link) => (
           <NavLink
@@ -25,8 +26,9 @@ const BottomNav = () => {
                   : 'text-slate-500 hover:text-slate-700 hover:bg-slate-100'
               }`
             }
+            aria-current={({ isActive }) => (isActive ? 'page' : undefined)}
           >
-            <span className="text-lg">{link.icon}</span>
+            <link.icon className="h-5 w-5" />
             <span className="text-xs font-medium">{link.label}</span>
           </NavLink>
         ))}
