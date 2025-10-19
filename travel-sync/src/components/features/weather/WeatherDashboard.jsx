@@ -13,6 +13,7 @@ const WeatherDashboard = () => {
     const newCity = formData.get('city');
     if (newCity?.trim()) {
       setCity(newCity.trim());
+      e.target.reset(); // Reset form after submission
     }
   };
 
@@ -23,14 +24,20 @@ const WeatherDashboard = () => {
       {/* City Input Form */}
       <form onSubmit={handleCitySubmit} className="mb-6">
         <div className="flex gap-2">
+          <label htmlFor="city-input" className="sr-only">
+            City name
+          </label>
           <input
+            id="city-input"
             type="text"
             name="city"
             placeholder="Enter city name..."
+            aria-label="Enter city name to search for weather"
             className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
           <button
             type="submit"
+            aria-label="Search for weather data"
             className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
           >
             Search
@@ -55,30 +62,30 @@ const WeatherDashboard = () => {
       {data && !isLoading && (
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
           <h3 className="text-xl font-semibold text-blue-900 mb-4">
-            {data.name}, {data.sys.country}
+            {data.name}, {data.sys?.country}
           </h3>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <p className="text-3xl font-bold text-blue-800">
-                {Math.round(data.main.temp)}°C
+                {Math.round(data.main?.temp ?? 0)}°C
               </p>
               <p className="text-blue-600 capitalize">
-                {data.weather[0].description}
+                {data.weather?.[0]?.description ?? 'N/A'}
               </p>
             </div>
 
             <div className="text-sm text-blue-700 space-y-1">
-              <p>Feels like: {Math.round(data.main.feels_like)}°C</p>
-              <p>Humidity: {data.main.humidity}%</p>
-              <p>Wind: {data.wind.speed} m/s</p>
-              <p>Pressure: {data.main.pressure} hPa</p>
+              <p>Feels like: {Math.round(data.main?.feels_like ?? 0)}°C</p>
+              <p>Humidity: {data.main?.humidity ?? 0}%</p>
+              <p>Wind: {data.wind?.speed ?? 0} m/s</p>
+              <p>Pressure: {data.main?.pressure ?? 0} hPa</p>
             </div>
           </div>
         </div>
       )}
 
-      {!city && !isLoading && (
+      {!city && !isLoading && !isError && (
         <div className="text-center py-8 text-gray-500">
           <p>Enter a city name to get weather information</p>
         </div>
