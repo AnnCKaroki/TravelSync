@@ -7,9 +7,12 @@ import { getTopHeadlines } from '../services/news.js';
  * @returns {Object} Object containing data, isLoading, and isError from useQuery
  */
 export const useNewsData = (countryCode) => {
+  const isValidCountryCode = countryCode && /^[A-Z]{2}$/i.test(countryCode);
+
   return useQuery({
     queryKey: ['news', countryCode],
     queryFn: () => getTopHeadlines(countryCode),
-    enabled: !!countryCode,
+    enabled: isValidCountryCode,
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 };

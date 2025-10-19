@@ -14,8 +14,11 @@ const NewsArticle = ({ title, sourceName, imageUrl, url }) => {
     >
       <img
         src={imageUrl}
-        alt="Article thumbnail"
+        alt={title}
         className="w-16 h-16 rounded object-cover flex-shrink-0"
+        onError={(e) => {
+          e.target.src = '/placeholder-image.png';
+        }}
       />
       <div className="flex-1 min-w-0">
         <h3 className="font-bold text-sm line-clamp-2 mb-1">

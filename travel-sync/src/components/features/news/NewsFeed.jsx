@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import Card from '../../common/Card.jsx';
 import NewsArticle from './NewsArticle.jsx';
 import { useNewsData } from '../../../hooks/useNewsData.js';
@@ -6,8 +7,8 @@ import { useNewsData } from '../../../hooks/useNewsData.js';
  * NewsFeed component that displays a list of top news headlines.
  * Features skeleton loading state and error handling.
  */
-const NewsFeed = () => {
-  const { data, isLoading, isError } = useNewsData('us');
+const NewsFeed = ({ region = 'us' }) => {
+  const { data, isLoading, isError, error } = useNewsData(region);
 
   // Skeleton loading state
   if (isLoading) {
@@ -37,15 +38,16 @@ const NewsFeed = () => {
     );
   }
 
-  // News articles display
-  if (data && data.length > 0) {
+  // News articles display with URL validation
+  const validArticles = data?.filter(article => article.url) || [];
+  if (validArticles.length > 0) {
     return (
       <Card>
         <div className="divide-y divide-gray-100">
-          {data.map((article) => (
+          {validArticles.map((article) => (
             <NewsArticle
               key={article.url}
-              title={article.title}
+              title={article.title || 'Untitled'}
               sourceName={article.source?.name || 'Unknown Source'}
               imageUrl={article.urlToImage || '/placeholder-image.png'}
               url={article.url}
@@ -62,6 +64,10 @@ const NewsFeed = () => {
       <div className="text-gray-500">No news articles available.</div>
     </Card>
   );
+};
+
+NewsFeed.propTypes = {
+  region: PropTypes.string,
 };
 
 export default NewsFeed;

@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import Card from '../../common/Card.jsx';
 import { useWeatherData } from '../../../hooks/useWeatherData.js';
 import { formatTemperature, capitalizeFirstLetter } from '../../../utils/formatters.js';
@@ -6,8 +7,8 @@ import { formatTemperature, capitalizeFirstLetter } from '../../../utils/formatt
  * WeatherCard component that displays current weather information for a city.
  * Features skeleton loading state and error handling.
  */
-const WeatherCard = () => {
-  const { data, isLoading, isError } = useWeatherData('Paris');
+const WeatherCard = ({ city = 'Paris' }) => {
+  const { data, isLoading, isError } = useWeatherData(city);
 
   // Skeleton loading state
   if (isLoading) {
@@ -34,25 +35,29 @@ const WeatherCard = () => {
     );
   }
 
-  // Weather data display
+  // Weather data display with safety checks
   if (data) {
-    const iconUrl = `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
+    const iconUrl = data.weather?.[0]?.icon
+      ? `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`
+      : null;
 
     return (
       <Card>
         <div className="flex items-center space-x-4">
-          <img
-            src={iconUrl}
-            alt="Weather icon"
-            className="w-16 h-16"
-          />
+          {iconUrl && (
+            <img
+              src={iconUrl}
+              alt={`${data.weather?.[0]?.description || 'Weather'} icon`}
+              className="w-16 h-16"
+            />
+          )}
           <div className="flex-1">
             <div className="text-5xl font-bold">
-              {formatTemperature(data.main.temp)}
+              {formatTemperature(data.main?.temp)}
             </div>
             <div className="text-lg font-medium">{data.name}</div>
             <div className="text-gray-500">
-              {capitalizeFirstLetter(data.weather[0].description)}
+              {capitalizeFirstLetter(data.weather?.[0]?.description || 'N/A')}
             </div>
           </div>
         </div>
@@ -61,6 +66,10 @@ const WeatherCard = () => {
   }
 
   return null;
+};
+
+WeatherCard.propTypes = {
+  city: PropTypes.string,
 };
 
 export default WeatherCard;
