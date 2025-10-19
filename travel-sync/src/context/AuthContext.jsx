@@ -1,9 +1,5 @@
-import { createContext, useState, useEffect } from 'react';
-
-/**
- * Authentication context for managing user state and auth functions.
- */
-export const AuthContext = createContext();
+import { useState, useEffect } from 'react';
+import { AuthContext } from './AuthContextProvider.jsx';
 
 /**
  * AuthProvider component that wraps the application with authentication state.
