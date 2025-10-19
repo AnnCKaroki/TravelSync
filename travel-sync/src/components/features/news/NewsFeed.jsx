@@ -8,7 +8,7 @@ import { useNewsData } from '../../../hooks/useNewsData.js';
  * Features skeleton loading state and error handling.
  */
 const NewsFeed = ({ region = 'us' }) => {
-  const { data, isLoading, isError, error } = useNewsData(region);
+  const { data, isLoading, isError } = useNewsData(region);
 
   // Skeleton loading state
   if (isLoading) {
